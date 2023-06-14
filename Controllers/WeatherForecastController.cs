@@ -4,30 +4,42 @@ namespace MercaExpress.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class WeatherForecastController : ControllerBase
+    public class ProductsController : ControllerBase
     {
         private static readonly string[] Summaries = new[]
         {
         "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
     };
 
-        private readonly ILogger<WeatherForecastController> _logger;
+        private readonly ILogger<ProductsController> _logger;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        public ProductsController(ILogger<ProductsController> logger)
         {
             _logger = logger;
         }
 
-        [HttpGet(Name = "GetWeatherForecast")]
-        public IEnumerable<WeatherForecast> Get()
+        [HttpGet]
+        public string Get()
         {
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = Random.Shared.Next(-20, 55),
-                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-            })
-            .ToArray();
+            return "Obtenemos todos los products";
+        }
+
+        [HttpPost]
+        public string Post([FromBody] string value)
+        {
+            return $"Creamos el product: {value}";
+        }
+
+        [HttpPut("{id}")]
+        public string Put(int id, [FromBody] string value)
+        {
+            return $"Actualizamos el product: {value}";
+        }
+
+        [HttpDelete("{id}")]
+        public string Delete(int id)
+        {
+            return $"Eliminamos el product: {id}";
         }
     }
 }
