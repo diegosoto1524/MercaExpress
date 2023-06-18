@@ -4,35 +4,35 @@ namespace MercaExpress
 {
     public class Producto
     {
-        public int Id { get; }  
-        int gramaje;
-        string nombreProducto;
-        double costo;
-        double precioVenta;
-        Proveedor provedorProducto;
+        public int Id { get; }
+        string NombreProducto { get; set; }
+        int Gramaje { get; set; }       
+        double Costo { get; set; }
+        double PrecioVenta { get; set; }
+        int IdProvedorProducto { get; set; }
         public int CantidadEnBodega { get; set; }
         public int CantidadEnExhibicion { get; set; }        
         static int consecutivoId;
-        public static List<Producto> listadoProductos = new List<Producto>();
-        public void AgregarProductoAListado(Producto producto)
+        public static List<Producto> ListadoProductos = new List<Producto>();
+       
+        public Producto(string nombreProducto, int gramaje, double costo, double precio, int idProveedor)
         {
-            listadoProductos.Add(producto);
-        }
-        public Producto(string nombre, double costo)
-        {
-            if (listadoProductos.Select(x => x.nombreProducto).Contains(nombre))
+            if (ListadoProductos.Select(x => x.NombreProducto).Contains(nombreProducto))
             {
                 throw new Exception("nombre ya existe");
             }
             else
             {
                 this.Id = consecutivoId;
-                this.nombreProducto = nombre;
-                this.costo = costo;
-                //this.precioVenta = precioVenta;
-                //this.provedorProducto = provedorProducto;
+                this.NombreProducto = nombreProducto;
+                this.Gramaje = gramaje;
+                this.Costo = costo;
+                this.PrecioVenta = precio;
+                this.IdProvedorProducto = idProveedor;
                 consecutivoId++;
+                ListadoProductos.Add(this);
             }
+            
         }              
                       
     }

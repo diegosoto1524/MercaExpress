@@ -23,11 +23,13 @@ namespace MercaExpress.Controllers
         {
             return "Obtenemos todos los products";
         }
-
-        [HttpPost]
-        public string Post([FromBody] string value)
+    
+        [HttpPost ("Crear Producto Nuevo")]
+        public string Post(string nombreProducto, int gramaje, double costo, double precio, int idProveedor)
         {
-            return $"Creamos el product: {value}";
+            Producto nuevo = new Producto(nombreProducto,gramaje,costo,precio,idProveedor);            
+            return $"Product created with Id: {nuevo.Id}";
+
         }
 
         [HttpPut("{id}")]

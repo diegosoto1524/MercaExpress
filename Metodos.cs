@@ -10,11 +10,11 @@
         {
             foreach (var p in lista)
             {
-                for (int j = 0;j<Producto.listadoProductos.Count; j++)
+                for (int j = 0;j<Producto.ListadoProductos.Count; j++)
                 {
-                    if (p.Producto == Producto.listadoProductos[j])
+                    if (p.Producto == Producto.ListadoProductos[j])
                     {
-                        AgregarAInventarioBodega(Producto.listadoProductos[j], p.Cantidad);   
+                        AgregarAInventarioBodega(Producto.ListadoProductos[j], p.Cantidad);   
                     }
                 }
             }
@@ -23,11 +23,11 @@
         {
             foreach (var p in lista)
             {
-                for (int j = 0; j < Producto.listadoProductos.Count; j++)
+                for (int j = 0; j < Producto.ListadoProductos.Count; j++)
                 {
-                    if (p.Producto == Producto.listadoProductos[j])
+                    if (p.Producto == Producto.ListadoProductos[j])
                     {
-                        QuitarDeInventarioBodega(Producto.listadoProductos[j], p.Cantidad);
+                        QuitarDeInventarioBodega(Producto.ListadoProductos[j], p.Cantidad);
                     }
                 }
             }
@@ -36,11 +36,11 @@
         {
             foreach (var p in lista)
             {
-                for (int j = 0; j < Producto.listadoProductos.Count; j++)
+                for (int j = 0; j < Producto.ListadoProductos.Count; j++)
                 {
-                    if (p.Producto == Producto.listadoProductos[j])
+                    if (p.Producto == Producto.ListadoProductos[j])
                     {
-                        AgregarAInventarioExhibicion(Producto.listadoProductos[j], p.Cantidad);
+                        AgregarAInventarioExhibicion(Producto.ListadoProductos[j], p.Cantidad);
                     }
                 }
             }
@@ -50,11 +50,11 @@
         {
             foreach (var p in lista)
             {
-                for (int j = 0; j < Producto.listadoProductos.Count; j++)
+                for (int j = 0; j < Producto.ListadoProductos.Count; j++)
                 {
-                    if (p.Producto == Producto.listadoProductos[j])
+                    if (p.Producto == Producto.ListadoProductos[j])
                     {
-                        QuitarDeInventarioExhibicion(Producto.listadoProductos[j], p.Cantidad);
+                        QuitarDeInventarioExhibicion(Producto.ListadoProductos[j], p.Cantidad);
                     }
                 }
             }
@@ -63,24 +63,16 @@
         public Producto buscarProductoPorId(int idBuscado)
         {
             Producto producto = null;
-            for(int i = 0; i < Producto.listadoProductos.Count; i++)
+            for(int i = 0; i < Producto.ListadoProductos.Count; i++)
             {
-                if (idBuscado == Producto.listadoProductos[i].Id)
+                if (idBuscado == Producto.ListadoProductos[i].Id)
                 {
-                    producto = Producto.listadoProductos[i];
+                    producto = Producto.ListadoProductos[i];
                     break;
                 }                    
             }
             return producto;
         }
-        /*public Producto buscarProductoPorNombre (string nombreBuscado)
-        {
-            metodo para buscar parciales de un nombre
-        }*/
-
-        public Producto buscarpornombre()
-        {
-            return new Producto("diego",0.1);
-        }
+       
     }
 }
