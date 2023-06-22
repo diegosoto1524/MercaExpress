@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
+
 namespace MercaExpress.Controllers
 {
     [ApiController]
@@ -23,12 +24,12 @@ namespace MercaExpress.Controllers
         {
             return "Obtenemos todos los products";
         }
-    
-        [HttpPost ("Crear Producto Nuevo")]
-        public string Post(string nombreProducto, int gramaje, double costo, double precio, int idProveedor)
+
+        [HttpPost]
+        public ActionResult CrearProducto([FromBody] Producto productoNuevo)
         {
-            Producto nuevo = new Producto(nombreProducto,gramaje,costo,precio,idProveedor);            
-            return $"Product created with Id: {nuevo.Id}";
+            Producto.AregarAListado(productoNuevo);            
+            return CreatedAtAction(nameof(CrearProducto), new { id = productoNuevo.Id }, productoNuevo);
 
         }
 
