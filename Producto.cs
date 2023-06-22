@@ -17,12 +17,7 @@ namespace MercaExpress
         private static int consecutivoId=1;
         public static List<Producto> ListadoProductos = new List<Producto>();
 
-        public static void AregarAListado(Producto producto)
-        {
-            consecutivoId++;
-            ListadoProductos.Add(producto);            
-        }
-
+        
         //public Producto(string nombreProducto, int gramaje, double costo, double precio, int idProveedor)
         //{
         //    if (ListadoProductos.Select(x => x.NombreProducto).Contains(nombreProducto))
@@ -44,8 +39,7 @@ namespace MercaExpress
         //}       
         public Producto()
         {
-            Id = consecutivoId;
-            consecutivoId++;
+            Id = consecutivoId++;            
             // Constructor sin parámetros requerido para la deserialización
         }
 

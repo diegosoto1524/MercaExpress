@@ -20,15 +20,31 @@ namespace MercaExpress.Controllers
         }
 
         [HttpGet]
-        public string Get()
+        public ActionResult<IEnumerable<Producto>> ObtenerTodosLosProductos()
         {
-            return "Obtenemos todos los products";
+            return Ok(Producto.ListadoProductos);
+        }
+
+        [HttpGet ("{id}")]
+        public ActionResult<Producto> ObtenerProductoPorId(int id)
+        {
+            Producto producto = Producto.ListadoProductos.FirstOrDefault(p=>p.Id == id);
+            if (producto == null)
+            {
+                return NotFound();
+            }
+            return Ok(producto);
         }
 
         [HttpPost]
         public ActionResult CrearProducto([FromBody] Producto productoNuevo)
         {
-            Producto.AregarAListado(productoNuevo);            
+            bool nombreExistente = Producto.ListadoProductos.Any(p => p.NombreProducto == productoNuevo.NombreProducto && p.Gramaje==productoNuevo.Gramaje);
+            if (nombreExistente)
+            {
+                return Conflict("el producto ya existe");
+            }
+            Producto.ListadoProductos.Add(productoNuevo);
             return CreatedAtAction(nameof(CrearProducto), new { id = productoNuevo.Id }, productoNuevo);
 
         }
