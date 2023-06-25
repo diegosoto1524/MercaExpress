@@ -6,12 +6,7 @@ namespace MercaExpress.Controllers
     [ApiController]
     [Route("[controller]")]
     public class ProductsController : ControllerBase
-    {
-        private static readonly string[] Summaries = new[]
-        {
-        "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-    };
-
+    {        
         private readonly ILogger<ProductsController> _logger;
 
         public ProductsController(ILogger<ProductsController> logger)
@@ -24,7 +19,7 @@ namespace MercaExpress.Controllers
         {
             return Ok(Producto.ListadoProductos);
         }
-
+        
         [HttpGet ("{id}")]
         public ActionResult<Producto> ObtenerProductoPorId(int id)
         {
@@ -56,9 +51,17 @@ namespace MercaExpress.Controllers
         }
 
         [HttpDelete("{id}")]
-        public string Delete(int id)
+        public ActionResult Delete(int id)
         {
-            return $"Eliminamos el product: {id}";
+            Producto aBorrar=Producto.ListadoProductos.FirstOrDefault(p=> p.Id == id);
+            if (aBorrar == null) 
+            {
+                return NotFound();
+            }
+            Producto.ListadoProductos.Remove(aBorrar);
+            //return CreatedAtAction(nameof(Delete), new { id = id }, aBorrar);
+            return NoContent();
+
         }
     }
 }
