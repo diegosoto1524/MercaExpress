@@ -45,9 +45,18 @@ namespace MercaExpress.Controllers
         }
 
         [HttpPut("{id}")]
-        public string Put(int id, [FromBody] string value)
+        public ActionResult Put(int id, Producto modificacionProducto)
         {
-            return $"Actualizamos el product: {value}";
+            Producto nuevo=Producto.ListadoProductos.FirstOrDefault(p => p.Id == modificacionProducto.Id);
+            if(nuevo == null) { return NotFound();}
+            nuevo.NombreProducto = modificacionProducto.NombreProducto;
+            nuevo.IdProvedorProducto = modificacionProducto.IdProvedorProducto;
+            nuevo.PrecioVenta = modificacionProducto.PrecioVenta;
+            nuevo.Gramaje=modificacionProducto.Gramaje;
+            nuevo.Costo = modificacionProducto.Costo;
+            
+            return NoContent();
+
         }
 
         [HttpDelete("{id}")]
@@ -59,7 +68,6 @@ namespace MercaExpress.Controllers
                 return NotFound();
             }
             Producto.ListadoProductos.Remove(aBorrar);
-            //return CreatedAtAction(nameof(Delete), new { id = id }, aBorrar);
             return NoContent();
 
         }
