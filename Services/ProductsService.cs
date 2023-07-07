@@ -1,4 +1,7 @@
 using MercaExpress;
+using Microsoft.AspNetCore.Mvc;
+using System.Data;
+using System.Net;
 
 namespace MercaExpress.Services;
 
@@ -10,7 +13,13 @@ public class ProductsService : IProductsService
 
     public Producto CreateProduct(Producto productoNuevo)
     {
-        throw new NotImplementedException();
+        bool nombreExistente = Producto.ListadoProductos.Any(p => p.NombreProducto == productoNuevo.NombreProducto && p.Gramaje == productoNuevo.Gramaje);
+        if (nombreExistente)
+        {
+            throw new Exception("El producto ya existe");            
+        }
+        Producto.ListadoProductos.Add(productoNuevo);
+        return productoNuevo;
     }
 
     public Producto DeleteProduct(int id)

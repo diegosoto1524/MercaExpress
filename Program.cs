@@ -1,7 +1,9 @@
+using MercaExpress.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
+builder.Services.AddSingleton<IProductsService,ProductsService>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -21,3 +23,4 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+

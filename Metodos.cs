@@ -1,7 +1,11 @@
-﻿namespace MercaExpress
+﻿using System.Data.SqlClient;
+
+namespace MercaExpress
+  
 {
     public class Metodos
     {
+        
         public void AgregarAInventarioBodega (Producto producto, int agregar) => producto.CantidadEnBodega+= agregar;        
         public void AgregarAInventarioExhibicion(Producto producto, int agregar) => producto.CantidadEnExhibicion += agregar;
         public void QuitarDeInventarioBodega(Producto produto, int restar) => produto.CantidadEnBodega -= restar;
