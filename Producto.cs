@@ -11,6 +11,7 @@ namespace MercaExpress
         public int Gramaje { get; set; }       
         public double Costo { get; set; }
         public double PrecioVenta { get; set; }
+        //public UnidadDeMedida UnidadDeMedida { get; set; }
         public int IdProvedorProducto { get; set; }
         public int CantidadEnBodega { get; set; }
         public int CantidadEnExhibicion { get; set; }        

@@ -8,10 +8,10 @@ namespace MercaExpress.Controllers
     public class ProductsController : ControllerBase
     {
         private readonly ILogger<ProductsController> _logger;
-        private readonly ProductsService _productsService;
-
+        private readonly IProductsService _productsService;
+        
         public ProductsController(ILogger<ProductsController> logger,
-        ProductsService productsService)
+        IProductsService productsService)
         {
             _logger = logger;
             _productsService = productsService;
@@ -37,14 +37,15 @@ namespace MercaExpress.Controllers
         [HttpPost]
         public ActionResult CrearProducto([FromBody] Producto productoNuevo)
         {
-            bool nombreExistente = Producto.ListadoProductos.Any(p => p.NombreProducto == productoNuevo.NombreProducto && p.Gramaje == productoNuevo.Gramaje);
-            if (nombreExistente)
+            try
             {
-                return Conflict("el producto ya existe");
+                Producto productoCreado = _productsService.CreateProduct(productoNuevo);
+                return CreatedAtAction(nameof(CrearProducto), new { id = productoCreado.Id }, productoCreado);
             }
-            Producto.ListadoProductos.Add(productoNuevo);
-            return CreatedAtAction(nameof(CrearProducto), new { id = productoNuevo.Id }, productoNuevo);
-
+            catch (Exception ex)
+            {
+                return Conflict(ex.Message);
+            }
         }
 
         [HttpPut("{id}")]
