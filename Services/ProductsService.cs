@@ -2,58 +2,56 @@ using MercaExpress;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using System.Net;
+using DataAcces;
+using Entities;
+using DataAccess.Interfaces;
 
 namespace MercaExpress.Services;
 
 public class ProductsService : IProductsService
 {
+    IProductRepo repo;
+    string conectionString = "Server=HOWARD\\SQLEXPRESS;Database=MercaExpressDB;User Id=db; Password=123456789;Encrypt=true;TrustServerCertificate=true";
     public ProductsService()
     {
+        repo = new ProductRepo(conectionString);
     }
 
-    public Producto CreateProduct(Producto productoNuevo)
+    public Product CreateProduct(Product productoNuevo)
     {
-        bool nombreExistente = Producto.ListadoProductos.Any(p => p.NombreProducto == productoNuevo.NombreProducto && p.Gramaje == productoNuevo.Gramaje);
-        if (nombreExistente)
+        if (repo.CreateProduct(productoNuevo))
         {
-            throw new Exception("El producto ya existe");            
+            return productoNuevo;
         }
-        Producto.ListadoProductos.Add(productoNuevo);
-        return productoNuevo;
+
+        return null;        
+    }
+       
+    public List<Product> GetAllProducts()
+    {
+        return repo.GetAllProducts();
     }
 
-    public Producto DeleteProduct(int id)
+    public Product GetProductById(int id)
+    {
+        Product producto=repo.GetProductById(id);
+        return producto;
+    }
+
+    public List<Product> GetProductsByProviderId(int id)
     {
         throw new NotImplementedException();
     }
 
-    public List<Producto> GetAllProducts()
+    public bool UpdateProduct(int id, Product modificacionProducto)
     {
-        throw new NotImplementedException();
+        
+        return repo.UpdateProduct(id, modificacionProducto);
     }
 
-    public Producto GetProductById(int id)
+    bool IProductsService.DeleteProduct(int id)
     {
-        throw new NotImplementedException();
-    }
-
-    public List<Producto> GetProductsByProviderId(int id)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Producto UpdateProduct(int id, Producto modificacionProducto)
-    {
-        var productoExistente = Producto.ListadoProductos.FirstOrDefault(p => p.Id == modificacionProducto.Id);
-
-        if (productoExistente == null) { return null; }
-
-        productoExistente.NombreProducto = modificacionProducto.NombreProducto;
-        productoExistente.IdProvedorProducto = modificacionProducto.IdProvedorProducto;
-        productoExistente.PrecioVenta = modificacionProducto.PrecioVenta;
-        productoExistente.Gramaje = modificacionProducto.Gramaje;
-        productoExistente.Costo = modificacionProducto.Costo;
-
-        return productoExistente;
+        bool eliminado = repo.DeleteProduct(id);
+        return eliminado;
     }
 }

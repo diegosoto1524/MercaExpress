@@ -4,7 +4,7 @@ using System;
 
 namespace MercaExpress
 {
-    public class Producto
+    public class Product
     {
         public int Id { get;}
         public string NombreProducto { get; set; }
@@ -16,9 +16,9 @@ namespace MercaExpress
         public int CantidadEnBodega { get; set; }
         public int CantidadEnExhibicion { get; set; }        
         private static int consecutivoId=1;
-        public static List<Producto> ListadoProductos = new List<Producto>();
+        public static List<Product> ListadoProductos = new List<Product>();
           
-        public Producto()
+        public Product()
         {
             Id = consecutivoId++;            
             // Constructor sin parámetros requerido para la deserialización
