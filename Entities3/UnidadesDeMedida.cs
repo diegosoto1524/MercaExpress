@@ -2,6 +2,6 @@
 {
     public enum UnidadDeMedida
     {
-        gramos, unidades
+        gramos, unidades, litro, kilogramo
     }
 }

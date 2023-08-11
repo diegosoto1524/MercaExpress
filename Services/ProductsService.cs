@@ -1,5 +1,4 @@
 using MercaExpress;
-using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using System.Net;
 using DataAcces;
@@ -11,10 +10,9 @@ namespace MercaExpress.Services;
 public class ProductsService : IProductsService
 {
     IProductRepo repo;
-    string conectionString = "Server=HOWARD\\SQLEXPRESS;Database=MercaExpressDB;User Id=db; Password=123456789;Encrypt=true;TrustServerCertificate=true";
-    public ProductsService()
+    public ProductsService(IProductRepo repo)
     {
-        repo = new ProductRepo(conectionString);
+        this.repo = repo;   
     }
 
     public Product CreateProduct(Product productoNuevo)

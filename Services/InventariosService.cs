@@ -10,16 +10,44 @@ namespace MercaExpress.Services
     public class InventariosService : IInventariosService
     {
         IInventariosRepo repo;
-        string conectionString = "Server=HOWARD\\SQLEXPRESS;Database=MercaExpressDB;User Id=db; Password=123456789;Encrypt=true;TrustServerCertificate=true";
-        public InventariosService()
+        
+        public InventariosService(IInventariosRepo repo)
         {
-            repo = new InventariosRepo(conectionString);
+            this.repo = repo;
         }
 
-        public List<int> AgregarAInventarioBodega(List<Product> listadoProductos, List<int> listadoCantidades)
+        public List<double> AgregarAInventarioBodega(List<int> listadoProductos, List<double> listadoCantidades)
         {
-            List<int> inventariosNuevos = repo.AgregarInventarioBodega(listadoProductos, listadoCantidades);
+            List<double> inventariosNuevos = repo.AgregarAInventarioBodega(listadoProductos, listadoCantidades);
             return inventariosNuevos;
         }
+              
+
+        public List<int> AgregarAInventarioExhibicion(List<int> listadoProductos, List<int> listadoCantidades)
+        {
+            return repo.AgregarAInventarioExhibicion(listadoProductos,listadoCantidades);
+        }
+
+        public int GetInventarioBodegaById(int id)
+        {
+            return repo.GetInventarioBodegaById(id);
+        }
+            
+
+        public int GetInventarioExhibicionById(int id)
+        {
+           return repo.GetInventarioExhibicionById(id);
+        }
+
+        public List<double> SacarDeInventarioBodega(List<ProductQuantity> productQuantity)
+        {
+            return repo.SacarDeInvetarioBodega(productQuantity);
+        }
+
+        public List<int> SacarDeInventarioExhibicion(List<int> listadoProductos, List<int> listadoCantidades)
+        {
+            return repo.SacarDeInventarioExhibicion(listadoProductos, listadoCantidades);
+        }
+                
     }
 }

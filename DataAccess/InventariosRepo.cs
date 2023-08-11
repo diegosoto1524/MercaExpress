@@ -7,84 +7,159 @@ using System.Net.Http.Headers;
 using Entities;
 using Microsoft.Data.SqlClient;
 using DataAccess.Interfaces;
-
+using DataAcces;
 
 namespace DataAccess
 {
     public class InventariosRepo : IInventariosRepo
     {
-        private readonly SqlConnection connection;
-        public InventariosRepo(string connectionString)
+
+        IProductRepo productRepo;
+        IBaseRepo baseRepo;
+        public InventariosRepo(IBaseRepo baseRepo, IProductRepo productRepo)
         {
-            connection = new SqlConnection(connectionString);
-            connection.Open();
+            this.baseRepo = baseRepo;   
+            this.productRepo = productRepo;
         }
-        public List<int> AgregarInventarioBodega(List<Product> listadoProductos, List<int> listadoCantidades)
+
+        public List<double> AgregarAInventarioBodega(List<int> listadoProductos, List<double> listadoCantidades)
         {
-            List <int> listaNuevasCantidades = new List<int>();
-            for (int i= 0; i < listadoProductos.Count; i++)
+            List<double> listaNuevasCantidades = new List<double>();
+
+            for (int i = 0; i < listadoProductos.Count; i++)
             {
-                Product product = listadoProductos[i];
-                if (CheckIfProductExists(product.Id))
+                int idActual = listadoProductos[i];
+                if (productRepo.CheckIfProductExists(idActual))
                 {
-                    int CantActualEnBodega = GetCantidadEnBodega(product.Id);
+                    int CantActualEnBodega = GetInventarioBodegaById(idActual);
                     string sqlQuery = @"update [dbo].[Productos] set CantidadEnBodega=@CantidadEnBodega where Id=@Id";
-                    using (SqlCommand sqlCommand = new SqlCommand(sqlQuery, connection))
-                    {
-                        int cantidadEnBodegaNueva = listadoCantidades[i] + CantActualEnBodega;
-                        sqlCommand.Parameters.AddWithValue("@CantidadEnBodega", cantidadEnBodegaNueva);
-                        sqlCommand.Parameters.AddWithValue("@Id", product.Id);
-                        sqlCommand.ExecuteNonQuery();
-                        listaNuevasCantidades.Add(cantidadEnBodegaNueva);
-                    }
+                    double cantidadEnBodegaNueva = listadoCantidades[i] + CantActualEnBodega;
+                    List<SqlParameter> sqlParameters = new List<SqlParameter>();
+                    sqlParameters.Add(new SqlParameter("@CantidadEnBodega", cantidadEnBodegaNueva));
+                    sqlParameters.Add(new SqlParameter("@Id", idActual));
+                    baseRepo.UpdateInDataBase(sqlQuery, sqlParameters);
+                    listaNuevasCantidades.Add(cantidadEnBodegaNueva);
+
                 }
                 else
                 {
-                    throw new InvalidOperationException($"Verify, the product with Id: {product.Id} does not exist");
+                    throw new InvalidOperationException($"Verify, the product with Id: {idActual} does not exist");
                 }
             }
             return listaNuevasCantidades;
         }
-        private bool CheckIfProductExists(int id)  //REVISAR PARA DEJAR UN SOLO METODO
-        {
-            string sqlQuery = @"SELECT COUNT(*) FROM [dbo].[Productos] WHERE Id = @Id";
-            using (SqlCommand sqlCommand = new SqlCommand(sqlQuery, connection))
-            {
-                sqlCommand.Parameters.AddWithValue("@Id", id);
-                int count = Convert.ToInt32(sqlCommand.ExecuteScalar());
-                return count > 0;
-            }
 
-        }
-
-        private int GetCantidadEnBodega(int id)
+        public int GetInventarioBodegaById(int id)
         {
-            int cantidadEnBodegaActual=0;
+            int cantidadEnBodegaActual = 0;
             string sqlQuery = $"select CantidadEnBodega from [dbo].[Productos] where Id={id}";
-            using (SqlCommand sqlCommand = new SqlCommand(sqlQuery, connection))
+            using (SqlDataReader sqlDataReader = baseRepo.GetFromDataBase(sqlQuery))
             {
-                object result = sqlCommand.ExecuteScalar();
-                if (result != null)
+                if (sqlDataReader.Read())
                 {
-                    cantidadEnBodegaActual = Convert.ToInt32(result);                 
+                    object result = sqlDataReader.GetValue(0);
+                    if (result != null && result != DBNull.Value)
+                    {
+                        cantidadEnBodegaActual = Convert.ToInt32(result);
+                    }
                 }
-            }
+            }            
             return cantidadEnBodegaActual;
         }
 
-        public bool AgregarInventarioExhibicion(List<Product> listadoProductos, List<int> listadoCantidades)
+        public List<int> AgregarAInventarioExhibicion(List<int> listadoProductos, List<int> listadoCantidades)
         {
-            throw new NotImplementedException();
+            List<int> listaNuevoInventario = new List<int>();
+            for (int i = 0; i < listadoProductos.Count; i++)
+            {
+                int idActual = listadoProductos[i];
+                if (productRepo.CheckIfProductExists(idActual))
+                {
+                    int invActual = GetInventarioExhibicionById(idActual);
+                    string sqlQuery = "update [dbo].[Productos] set CantidadEnExhibicion=@CantidadEnExhibicion where Id = @Id";
+                    int cantidadNueva = invActual + listadoCantidades[i];
+                    List<SqlParameter> sqlParameters = new List<SqlParameter>();
+                    sqlParameters.Add(new SqlParameter("@Id", idActual));
+                    sqlParameters.Add(new SqlParameter("@CantidadEnExhibicion", cantidadNueva));
+                    baseRepo.UpdateInDataBase(sqlQuery, sqlParameters);
+                    listaNuevoInventario.Add(cantidadNueva);                    
+                }
+                else
+                {
+                    throw new InvalidOperationException($"Verify, the product with Id: {idActual} does not exist");
+                }
+            }
+
+            return listaNuevoInventario;
         }
 
-        public bool SacarDeInventarioExhibicion(List<Product> listadoProductos, List<int> listadoCantidades)
+        public int GetInventarioExhibicionById(int id)
         {
-            throw new NotImplementedException();
+            int cantidadEnExhibicion = 0;
+            string sqlQuery = $"select CantidadEnExhibicion from [dbo].[Productos] where Id={id}";
+            using (SqlDataReader sqlDataReader = baseRepo.GetFromDataBase(sqlQuery))
+            {
+                if (sqlDataReader.Read())
+                {
+                    object result = sqlDataReader.GetValue(0);
+                    if (result != null && result != DBNull.Value)
+                    {
+                        cantidadEnExhibicion = Convert.ToInt32(result);
+                    }
+                }
+            }
+            return cantidadEnExhibicion;
         }
 
-        public bool SacarDeInvetarioBodega(List<Product> listadoProductos, List<int> listadoCantidades)
+        public List<int> SacarDeInventarioExhibicion(List<int> listadoProductos, List<int> listadoCantidades)
         {
-            throw new NotImplementedException();
+            List<int> listaNuevoInventarioExhibicion = new List<int>();
+            for (int i = 0; i < listadoProductos.Count; i++)
+            {
+                int idActual = listadoProductos[i];
+                if (productRepo.CheckIfProductExists(idActual))
+                {
+                    int invActual = GetInventarioExhibicionById(idActual);
+                    string sqlQuery = "update [dbo].[Productos] set CantidadEnExhibicion=@CantidadEnExhibicion where Id=@Id";
+                    List<SqlParameter> sqlParameters = new List<SqlParameter>();
+                    int invNuevo = invActual - listadoCantidades[i];
+                    sqlParameters.Add(new SqlParameter("@CantidadEnExhibicion", invNuevo));
+                    sqlParameters.Add(new SqlParameter("@Id", idActual));
+                    baseRepo.UpdateInDataBase(sqlQuery, sqlParameters);
+                    listaNuevoInventarioExhibicion.Add(invNuevo);
+                }
+                else
+                {
+                    throw new InvalidOperationException($"Product with id: {idActual} does not exist");
+                }
+            }
+            return listaNuevoInventarioExhibicion;
+        }
+
+        public List<double> SacarDeInvetarioBodega(List<ProductQuantity> productQuantity)
+        {
+            List<double> listaNuevasCantidades = new List<double>();
+            for (int i = 0; i < productQuantity.Count; i++)
+            {
+                int idActual = productQuantity[i].Product.Id;
+                if (productRepo.CheckIfProductExists(idActual))
+                {
+                    int inventarioActual = GetInventarioBodegaById(idActual);
+                    string sqlQuery = $"update [dbo].[Productos] set CantidadEnBodega = @CantidadEnBodega where Id=@Id";
+                    double cantidadNueva = inventarioActual - productQuantity[i].Quantity;
+                    List<SqlParameter> sqlParameters = new List<SqlParameter>();
+                    sqlParameters.Add(new SqlParameter("@CantidadEnBodega", cantidadNueva));
+                    sqlParameters.Add(new SqlParameter("@Id", idActual));
+                    baseRepo.UpdateInDataBase(sqlQuery, sqlParameters);
+                    listaNuevasCantidades.Add(cantidadNueva);
+                }
+                else
+                {
+                    throw new InvalidOperationException($"Verify, the product with Id: {idActual} does not exist");
+                }
+            }
+            return listaNuevasCantidades;
+
         }
     }
 }

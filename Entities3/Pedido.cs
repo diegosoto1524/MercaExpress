@@ -3,20 +3,15 @@
     public class Pedido
     {
         int numeroPedido;
-        // DateTime fechaPedido;
-        // DateTime fechaRecepcion;
-        // Proveedor proveedor;
+        DateTime fechaPedido;
+        DateTime fechaRecepcion;
+        int idProveedor;
         string numeroFacturaProveedor;
-        List<ProductoCantidad> listadoPedido = new List<ProductoCantidad>();
+        List<ProductQuantity> listadoPedido = new List<ProductQuantity>();
 
         public static List<Pedido> historicoPedidos = new List<Pedido>();
 
-        public Pedido(int numeroPedido, List<ProductoCantidad> listadoPedido)
-        {
-            this.listadoPedido = listadoPedido;
-            this.numeroPedido = numeroPedido;
-            this.numeroFacturaProveedor = "pdte";
-        }
+       
 
         public void AgregarPedidoaHistorico(Pedido entrada)
         {

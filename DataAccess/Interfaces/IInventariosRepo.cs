@@ -9,10 +9,13 @@ namespace DataAccess.Interfaces
 {
     public interface IInventariosRepo
     {
-        List <int> AgregarInventarioBodega(List<Product> listadoProductos, List <int> listadoCantidades);
-        bool AgregarInventarioExhibicion (List<Product> listadoProductos, List <int> listadoCantidades);
-        bool SacarDeInvetarioBodega(List<Product> listadoProductos, List<int> listadoCantidades);
-        bool SacarDeInventarioExhibicion(List<Product> listadoProductos, List<int> listadoCantidades);
+        List <double> AgregarAInventarioBodega(List<int> listadoProductos, List <double> listadoCantidades);
+        int GetInventarioBodegaById (int id);
+        int GetInventarioExhibicionById(int id);
+        List <int> AgregarAInventarioExhibicion (List<int> listadoProductos, List <int> listadoCantidades);
+        List <double> SacarDeInvetarioBodega(List<ProductQuantity> productQuantity);
+        List <int> SacarDeInventarioExhibicion(List<int> listadoProductos, List<int> listadoCantidades);
+        
 
     }
 }

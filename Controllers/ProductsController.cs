@@ -11,8 +11,7 @@ namespace MercaExpress.Controllers
         private readonly ILogger<ProductsController> _logger;
         private readonly IProductsService _productsService;
         
-        public ProductsController(ILogger<ProductsController> logger,
-        IProductsService productsService)
+        public ProductsController(ILogger<ProductsController> logger,IProductsService productsService)
         {
             _logger = logger;
             _productsService = productsService;
@@ -38,6 +37,7 @@ namespace MercaExpress.Controllers
         [HttpPost]
         public ActionResult CreateProduct([FromBody] Product productoNuevo)
         {
+            //como hago para que no me aparezca el Id?
             try
             {
                 Product productoCreado = _productsService.CreateProduct(productoNuevo);

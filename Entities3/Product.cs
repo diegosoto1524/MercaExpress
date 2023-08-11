@@ -13,7 +13,6 @@ namespace Entities
         public double PrecioVenta { get; set; }
         public UnidadDeMedida UnidadDeMedida { get; set; }
         public ProductFamily ProductFamilies { get; set; }   
-        public int IdProvedor { get; set; }
         public int CantidadEnBodega { get; set; }
         public int CantidadEnExhibicion { get; set; }        
         
